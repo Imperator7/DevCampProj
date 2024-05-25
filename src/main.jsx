@@ -13,36 +13,60 @@ import SignIn from './components/Signin.jsx'
 import Home from './components/Home.jsx'
 import axios from 'axios'
 
-const mainEndpoint = 'https://crudcrud.com/api/8dee5a6425e94d9198af5e48c3230298' 
+const mainEndpoint = 'https://crudcrud.com/api/f65a67b05b704452a59234ef4f041cc3' 
 const userEndpoint = mainEndpoint + '/users'
-const waitListEndpoint = mainEndpoint + '/waitlist'
 
-const users = await axios.get(userEndpoint)
-const handleLogIn = () => {
-  console.log("Log in")
+
+let users;
+
+const handleLogIn = async (userLogIn, state) => {
+  users = await axios.get(userEndpoint)
+  const filteredArray = await users.data.filter((user) => user.user.email === userLogIn.email)
+  const created = filteredArray.length === 0 
+  if (!created) {
+    if (userLogIn.password === filteredArray[0].user.password) {
+      console.log('successfully login')
+      localStorage.setItem('user', JSON.stringify(filteredArray[0].user))
+      location.reload()
+    } else {
+      alert('Please recheck your email and password.')
+    }
+  } else {
+    alert('Please recheck your email and password.')
+  }
 }
 
 const handleRegister = async (userRegister) => {
-  console.log(users.data.map((user) => console.log(user.user.email)))
-  console.log(userRegister.email)
-  const created = await users.data.filter((user) => user.user.email === userRegister.email)
-  console.log(users.data)
-  console.log(created)
-  if (!created) {
+  users = await axios.get(userEndpoint)
+  const filteredArray = await users.data.filter((user) => user.user.email === userRegister.email)
+  const created = filteredArray.length === 0 
+
+  if (created) {
     const newUser = await axios.post(userEndpoint, {
       user: {
         name: userRegister.name,
         username: userRegister.username,
         email: userRegister.email,
-        password: userRegister.password
+        password: userRegister.password,
+        movieList: userRegister.movieList
       }
     })
     axios.get(userEndpoint).then((r)=> console.log(r.data))
+    alert("You're succesfully create new id.")
   } else {
-    console.log("This email is already used, please try again with other email. ")
+    alert("This email is already used, please try again with other email.")
   }
 }
 
+const handleLogOut = async (state) => {
+  const newState = cloneDeep(state)
+  newState.name = ''
+  newState.username = ''
+  newState.email = ''
+  newState.password = ''
+  newState.movieList = []
+  return newState
+}
 const cloneDeep = (state) => {
   return JSON.parse(JSON.stringify(state))
 }
@@ -63,42 +87,36 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home/>
-  }
+  },
 ])
 
-const loginUserReducer = (state = { username: '', userpassword: ''}, action) => {
-  if (action.type === 'LOG_IN') {
-    const newState = cloneDeep(state)
-    newState.username = action.payload.username
-    newState.userpassword = action.payload.userpassword
-    handleLogIn()
-    return newState
-  }
 
-  return state
-}
-
-const  registerUserReducer = (state = { email: '', password: ''}, action) => {
-
+const userReducer = (state = { email: '', password: '', name: '', username: '', movieList: []}, action) => {
   if (action.type === 'SET_STATE') {
     const newState = cloneDeep(state);
     newState.email = action.payload.email;
+    newState.name = action.payload.name;
+    newState.username = action.payload.username;
     newState.password = action.payload.password;
+    newState.movieList = action.payload.movieList
 
-    console.log(newState)
     return newState
 
+  } else if (action.type === 'REGISTER') {
+    handleRegister(action.payload)
+
+  } else if (action.type === 'LOG_IN') {
+    handleLogIn(action.payload, state)
+  
+  } else if (action.type === 'LOG_OUT') {
+    handleLogOut(state)
   }
 
-  if (action.type === 'REGISTER') {
-    handleRegister(action.payload)
-  }
   return state
 }
 
 const storeReducer = combineReducers({
-  loginUser: loginUserReducer, 
-  registerUser: registerUserReducer
+  user: userReducer
 })
 
 const store = createStore(storeReducer)

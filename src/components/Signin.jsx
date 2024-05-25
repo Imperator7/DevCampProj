@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react'
 import Navbar from './Navbar/Navbar'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router'
  
 export default function SignIn() {
     const [localEmail, setLocalEmail] = useState('')
     const [localPassword, setLocalPassword] = useState('')
     const [clicked, setClicked] = useState(false)
-    const [checkedEmail, setCheckedEmail] = useState(false)
-    const [checkedPassword, setCheckedPassword] = useState(false)
+    const [checkFormats, setCheckFormats] = useState({
+        email: false,
+        password: false
+    })
 
     const emailRegex = /^[\w\.-]+@[a-zA-A\d\.=]+\.[a-zA-Z]{2,}$/;
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const storedUser = JSON.parse(localStorage.getItem('user'))
+
+    const userEmail = useSelector((state) => state.user.email)
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -18,7 +26,7 @@ export default function SignIn() {
             setClicked(true)
         }
 
-        if (checkedEmail && checkedPassword) {
+        if (checkFormats.email && checkFormats.password) {
             // dispatch to login
             dispatch({
                 type: 'LOG_IN',
@@ -31,21 +39,20 @@ export default function SignIn() {
         }
     
     useEffect(() => {
-        if (emailRegex.test(localEmail)){
-            setCheckedEmail(true)
-        } else {
-            setCheckedEmail(false)
-        }     
-    }, [localEmail])
+        setCheckFormats({
+            email: emailRegex.test(localEmail),
+            password: localPassword.length <= 20 && localPassword.length >= 8
+        })
+    }, [localEmail, localPassword])
 
     useEffect(() => {
-        if (localPassword.length <= 20 && localPassword.length >= 8) {
-            setCheckedPassword(true)
-        }  else {
-            setCheckedPassword(false)
+        if (storedUser.email !== '') {
+            navigate('/home') 
+        } else {
+            console.log('log out')
         }
-    }, [localPassword])
-
+    }, [userEmail])
+    
     return (
         <div>
             <div style={{border: '1px solid black', padding: '0 0 2.5vh'}}>
@@ -59,7 +66,7 @@ export default function SignIn() {
                         <br />
                         <input className='input-box-style' type="text" onChange={(e) => setLocalEmail(e.target.value)} value={localEmail}/>
                         {
-                            clicked && !checkedEmail && <p style={{color: 'red'}}>Please enter a valid email</p>
+                            clicked && !checkFormats.email && <p style={{color: 'red'}}>Please enter a valid email</p>
                         }
                     </div>
                     <div style={{padding: '0 5px'}}>
@@ -67,7 +74,7 @@ export default function SignIn() {
                         <br />
                         <input className='input-box-style' type="text" onChange={(e) => setLocalPassword(e.target.value)} value={localPassword}/>
                         {
-                            clicked && !checkedPassword && <p style={{color: 'red'}}>Password needs to have length between 8 to 20</p>
+                            clicked && !checkFormats.password && <p style={{color: 'red'}}>Password needs to have length between 8 to 20</p>
                         }
                     </div>
                     <button className='btn-signin' style={{width: '8vw', height: '4vh'}}>Submit</button>

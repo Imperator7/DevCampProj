@@ -8,12 +8,13 @@ export default function Register() {
     const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.=]+\.[a-zA-Z]{2,}$/;
     const dispatch = useDispatch()
 
-    const email = useSelector((state) => state.registerUser.email)
+    const email = useSelector((state) => state.user.email)
     const [localName, setLocalName] = useState('')
     const [localUsername, setLocalUsername] = useState('')
     const [localEmail, setLocalEmail] = useState(email)
     const [localPassword, setLocalPassword] = useState('')
     const [localConfirmPassword, setLocalConfirmPassword] = useState('')
+    const [clicked, setClicked] = useState(false)
     const [checkFormats, setCheckFormats] = useState({
         name: false,
         username: false,
@@ -24,47 +25,27 @@ export default function Register() {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        dispatch({type: 'REGISTER', payload: {
-            name: e.target.name.value,
-            username: e.target.username.value,
-            email: e.target.email.value,
-            password: e.target.password.value
-        }})
-        
-
+        setClicked(true)
+        if (checkFormats.name && checkFormats.username && checkFormats.email && checkFormats.password && checkFormats.confirmPassword) {
+            dispatch({type: 'REGISTER', payload: {
+                name: e.target.name.value,
+                username: e.target.username.value,
+                email: e.target.email.value,
+                password: e.target.password.value
+            }})
+        } 
     }
 
     useEffect(() => {
-        if (localName) {
-            setCheckFormats((prev) => {
-                prev.name = true
-                return prev
-            })
-        } else {
-            setCheckFormats((prev) => {
-                prev.name = false
-                return prev
-            })
-        }
-    }, [localName])
-
-    useEffect(() => {
-        if (localUsername) {
-            setCheckFormats((prev) => {
-                prev.username = true
-                return prev
-            })
-        } else {
-            setCheckFormats((prev) => {
-                prev.username = false
-                return prev
-            })
-        }
-    }, [localUsername])
-
-    useEffect(() => {
-
-    }, [localEmail])
+        setCheckFormats((prev) => ({
+            ...prev,
+            name: localName.length > 3,
+            username: localUsername.length > 3,
+            email: emailRegex.test(localEmail),
+            password: localPassword.length <= 20 && localPassword.length >= 8,
+            confirmPassword: localConfirmPassword === localPassword && localConfirmPassword !== ''
+        }))
+    }, [localPassword, localConfirmPassword, localEmail, localName, localUsername])
 
     return (
         <div>
@@ -78,26 +59,41 @@ export default function Register() {
                         <label>Name</label>
                         <br />
                         <input className='input-box-style' name='name' type="text" onChange={(e) => setLocalName(e.target.value)} value={localName}/>
+                        {
+                            clicked && !checkFormats.name && <label style={{color: 'red'}}>Please recheck your name</label>
+                        }
                     </div>
                     <div  style={{padding: '0 5px'}}>
                         <label>Username</label>
                         <br />
                         <input className='input-box-style' name='username' type="text" onChange={(e) => setLocalUsername(e.target.value)} value={localUsername}/>
+                        {
+                            clicked && !checkFormats.username && <label style={{color: 'red'}}>Please recheck your username</label>
+                        }
                     </div>
                     <div style={{padding: '0 5px'}}>
                         <label>Email address</label>
                         <br />
                         <input className='input-box-style' name='email' type="text" onChange={(e) => setLocalEmail(e.target.value)} value={localEmail}/>
+                        {
+                            clicked && !checkFormats.email && <label style={{color: 'red'}}>Please recheck your email</label>
+                        }
                     </div>
                     <div style={{padding: '0 5px'}}>
                         <label>Password</label>
                         <br />
                         <input className='input-box-style' name='password' type="text" onChange={(e) => setLocalPassword(e.target.value)} value={localPassword}/>
+                        {
+                            clicked && !checkFormats.password && <label style={{color: 'red'}}>Please recheck your password</label>
+                        }
                     </div>
                     <div style={{padding: '0 5px'}}>
                         <label>Confirm password</label>
                         <br />
                         <input className='input-box-style' type="text" onChange={(e) => setLocalConfirmPassword(e.target.value)} value={localConfirmPassword}/>
+                        {
+                            clicked && !checkFormats.confirmPassword && <label style={{color: 'red'}}>Please recheck your confirm password</label>
+                        }
                     </div>
                     <button className='btn-signin' style={{width: '8vw', height: '4vh'}}>Submit</button>
                 </form>

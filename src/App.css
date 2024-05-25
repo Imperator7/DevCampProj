@@ -18,3 +18,25 @@ body {
   background-color: black;
 }
 
+.movie-card {
+  border: 1px solid black;
+  width: 15vw;
+  height: 35vh;
+  border-radius: 1vw;
+  margin: 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 200px;
+  max-width: 250px
+}
+
+.movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 250px)); /* Adjust the min and max width as needed */
+  gap: 10px;
+  justify-content: center;
+}
