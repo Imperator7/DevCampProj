@@ -1,21 +1,22 @@
 {
     "rewrites": [
       {
-        "path": "/",
-        "element": "<Root />"
+        "source": "/",
+        "destination": "/index.html"
       },
       {
-        "path": "/register",
-        "element": "<Register />"
+        "source": "/register",
+        "destination": "/index.html"
       },
       {
-        "path": "/login",
-        "element": "<SignIn />"
+        "source": "/login",
+        "destination": "/index.html"
       },
       {
-        "path": "/home",
-        "element": "<Home />"
+        "source": "/home",
+        "destination": "/index.html"
       }
     ]
-  }
+}
+  
   
