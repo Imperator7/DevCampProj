@@ -15,7 +15,7 @@ const removeKeys = (obj, keys) =>
     Object.entries(obj).filter(([key]) => !keys.includes(key))
   );
 const mainEndpoint =
-  "https://crudcrud.com/api/fc48a2a443aa4dde812c10344ee9b082";
+  "https://crudcrud.com/api/e82a54aee5464343ae14645fe2dfa34e";
 const userEndpoint = mainEndpoint + "/users";
 
 let users;
