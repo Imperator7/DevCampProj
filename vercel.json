@@ -1,0 +1,21 @@
+{
+    "rewrites": [
+      {
+        "path": "/",
+        "element": "<Root />"
+      },
+      {
+        "path": "/register",
+        "element": "<Register />"
+      },
+      {
+        "path": "/login",
+        "element": "<SignIn />"
+      },
+      {
+        "path": "/home",
+        "element": "<Home />"
+      }
+    ]
+  }
+  
