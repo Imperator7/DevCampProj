@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router'
 export default function Register() {
     const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.=]+\.[a-zA-Z]{2,}$/;
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    const email = useSelector((state) => state.user.email)
+    const userState = useSelector((state) => state.user)
     const [localName, setLocalName] = useState('')
     const [localUsername, setLocalUsername] = useState('')
-    const [localEmail, setLocalEmail] = useState(email)
+    const [localEmail, setLocalEmail] = useState(userState.email)
     const [localPassword, setLocalPassword] = useState('')
     const [localConfirmPassword, setLocalConfirmPassword] = useState('')
     const [clicked, setClicked] = useState(false)
@@ -23,6 +24,15 @@ export default function Register() {
         confirmPassword: false
     })
 
+    const initialState = {
+        user: JSON.parse(localStorage.getItem('user')) || { email: '', password: '', name: '', username: '', movieList: [] }
+      }
+      useEffect(() => {
+        if (initialState.user.name !== '') {
+          navigate('/home')
+        }
+      }, [])
+    
     const onSubmit = (e) => {
         e.preventDefault()
         setClicked(true)
@@ -49,7 +59,7 @@ export default function Register() {
 
     return (
         <div>
-            <div style={{border: '1px solid black', padding: '0 0 2.5vh'}}>
+            <div style={{border: '0.5px solid gray', padding: '0 0 2.5vh', borderTop: 0, borderLeft: 0, borderRight: 0}}>
                 <Navbar location="register"/>
             </div>
             <div style={{padding: '2vh'}}>

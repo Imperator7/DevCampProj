@@ -36,7 +36,7 @@ body {
 
 .movie-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 250px)); /* Adjust the min and max width as needed */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 220px)); /* Adjust the min and max width as needed */
   gap: 10px;
   justify-content: center;
 }

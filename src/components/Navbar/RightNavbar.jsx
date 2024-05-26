@@ -1,14 +1,17 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router"
 
 export default function RightNavbar(props) {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const location = props.location
 
     const user = useSelector((state) => state.user)
-    console.log(user)
     const handleLogOut = () => {
-        localStorage.setItem('user', JSON.stringify({"name":"","username":"","email":"","password":""}));
+        localStorage.setItem('user', JSON.stringify({"name":"","username":"","email":"","password":"", "movieList":[]}));
+        dispatch({
+            type: "LOG_OUT"
+        })
         navigate('/')
     }
     return (
@@ -16,16 +19,16 @@ export default function RightNavbar(props) {
 
             {
                 location === 'register'? 
-                <button className="btn-signin" onClick={() => navigate('/login')}>
+                <button className="btn-signin-navbar" onClick={() => navigate('/login')}>
                     Sign in
                 </button>:
                 location === 'login'? 
-                <button className="btn-signin" onClick={() => navigate('/register')}>
+                <button className="btn-signin-navbar" onClick={() => navigate('/register')}>
                     Sign up
                 </button>:
                 <div>
-                    <b>Welcome</b> { user.username }    
-                    <button className="btn-signin" onClick={() => handleLogOut()}>
+                    <b>Welcome</b> { user.name }    
+                    <button className="btn-signin-navbar" onClick={() => handleLogOut()}>
                         Log out
                     </button>
                 </div>

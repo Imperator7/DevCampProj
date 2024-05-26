@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Movielist() {
   const [movies, setMovies] = useState([]);
-
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
   useEffect(() => {
     const fetchMovies = async () => {
       const moviesData = [
@@ -37,15 +39,28 @@ export default function Movielist() {
     fetchMovies();
   }, []);
 
-  const handleAddWishList = () => {
-    console.log("yeah nice")
+  const handleAddWishList = (e) => {
+    dispatch({
+      type: 'ADD_MOVIE',
+      payload: e.target.id
+    })
+  }
+
+  const handleRemoveWishList = (e) => {
+    dispatch({
+      type: 'REMOVE_MOVIE',
+      payload: e.target.id
+    })
   }
   return (
     <div className='movie-list'>
       {movies.map((movie, index) => (
-        <div key={index} className="movie-card" style={{ backgroundImage: `url(${movie.img})` }}>
+        <div key={index} id={index} className="movie-card" style={{ backgroundImage: `url(${movie.img})`, border: user.movieList.includes(String(index))? '2px solid red' : '2px solid black'}}>
           <label style={{backgroundColor:'white'}}>{movie.name}</label>
-          <button onClick={()=>handleAddWishList()}>Add to Wishlist</button>
+          {
+            user.movieList.includes(String(index))? (<button id={index} onClick={(e)=>handleRemoveWishList(e)}>Remove from Wishlist</button>) : (<button id={index} onClick={(e)=>handleAddWishList(e)}>Add to Wishlist</button>)
+          }
+          
         </div>
       ))}
     </div>

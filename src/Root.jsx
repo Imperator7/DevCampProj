@@ -7,14 +7,21 @@ import { useNavigate } from 'react-router'
 
 function Root() {
   const navigate = useNavigate()
-  useEffect(()=> {
-    console.log(localStorage.getItem('user'))
-    const storedUser = JSON.parse(localStorage.getItem('user'))
-    if (storedUser.email) {
+  // useEffect(()=> {
+  //   const storedUser = JSON.parse(localStorage.getItem('user'))
+  //   if (storedUser.email) {
+  //     navigate('/home')
+  //   }
+  // }, [])
+  const initialState = {
+    user: JSON.parse(localStorage.getItem('user')) || { email: '', password: '', name: '', username: '', movieList: [] }
+  }
+  useEffect(() => {
+    if (initialState.user.name !== '') {
       navigate('/home')
     }
   }, [])
-
+  
   return (
     <>
       <div style={{height:"85vh", width: "100%", position:"absolute", left: 0, top: 0, backgroundImage: `url(${image})`, filter: 'brightness(80%)'}}>

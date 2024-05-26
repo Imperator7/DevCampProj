@@ -15,10 +15,15 @@ export default function SignIn() {
     const emailRegex = /^[\w\.-]+@[a-zA-A\d\.=]+\.[a-zA-Z]{2,}$/;
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    const storedUser = JSON.parse(localStorage.getItem('user'))
-
-    const userEmail = useSelector((state) => state.user.email)
+    
+    const initialState = {
+        user: JSON.parse(localStorage.getItem('user')) || { _id: "", user: {email: '', password: '', name: '', username: '', movieList: []} }
+      }
+      useEffect(() => {
+        if (initialState.user.name !== '') {
+          navigate('/home')
+        }
+      }, [])
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -45,17 +50,17 @@ export default function SignIn() {
         })
     }, [localEmail, localPassword])
 
-    useEffect(() => {
-        if (storedUser.email !== '') {
-            navigate('/home') 
-        } else {
-            console.log('log out')
-        }
-    }, [userEmail])
+    // useEffect(() => {
+    //     if (storedUser.email !== '') {
+    //         navigate('/home') 
+    //     } else {
+    //         console.log('log out')
+    //     }
+    // }, [userEmail])
     
     return (
         <div>
-            <div style={{border: '1px solid black', padding: '0 0 2.5vh'}}>
+            <div style={{border: '0.5px solid gray', padding: '0 0 2.5vh', borderTop: 0, borderLeft: 0, borderRight: 0}}>
                 <Navbar location="login"/>
             </div>
             <div style={{padding: '2vh'}}>

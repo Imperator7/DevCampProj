@@ -38,8 +38,8 @@ export default function GetStarted() {
             <div>
                 <div style={{position: 'absolute',textAlign: 'left', left: '50%', transform: 'translate(-50%,0%)'}}>
                     <div>
-                        <input type="text" onChange={(e) => setLocalEmail(e.target.value)} value={localEmail} placeholder="Enter your email here" style={{borderRadius: '5px', height: '5vh', width: '37vw'}}/>
-                        <button onClick={onClick} className="btn-signin">Get Started {">"}</button>
+                        <input className='input-box-style' type="text" onChange={(e) => setLocalEmail(e.target.value)} value={localEmail} placeholder="Enter your email here" style={{borderRadius: '5px', height: '5vh', width: '37vw', padding: '1vw'}}/>
+                        <button onClick={onClick} className="btn-signin-getStart">Get Started {">"}</button>
                     </div>
                     <b style={{color: 'red'}}>
                     {

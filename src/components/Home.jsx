@@ -8,10 +8,12 @@ export default function Home() {
     const navigate = useNavigate()
     const user = useSelector((state) => state.user)
     const dispatch = useDispatch()
-
+    
+    useEffect(() => {
+        localStorage.setItem('user', JSON.stringify(user))
+    }, [user])
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'))
-        console.log(storedUser)
         if (storedUser.email === '') {
             navigate('/')
         } else {
@@ -30,7 +32,7 @@ export default function Home() {
     return (
         <div>
             <div>
-                <div style={{border: '1px solid black', padding: '0 0 2.5vh'}}>
+                <div style={{border: '1px solid black', padding: '0 0 2.5vh', margin: '0 0 10px 0'}}>
                     <Navbar location="home"/>
                 </div>
                 <Movielist />
