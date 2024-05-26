@@ -4,7 +4,7 @@ import Root from "./Root.jsx";
 import "./index.css";
 import { Provider } from "react-redux";
 import { legacy_createStore as createStore, combineReducers } from "redux";
-import { createBrowserRouter, RouterProvider, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, RouterProvider, Route, Routes } from 'react-router-dom';
 import Register from "./components/Register.jsx";
 import SignIn from "./components/Signin.jsx";
 import Home from "./components/Home.jsx";
@@ -103,24 +103,24 @@ const cloneDeep = (state) => {
   return JSON.parse(JSON.stringify(state));
 };
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/login",
-    element: <SignIn />,
-  },
-  {
-    path: "/home",
-    element: <Home />,
-  },
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <Root />,
+//   },
+//   {
+//     path: "/register",
+//     element: <Register />,
+//   },
+//   {
+//     path: "/login",
+//     element: <SignIn />,
+//   },
+//   {
+//     path: "/home",
+//     element: <Home />,
+//   },
+// ]);
 
 const userReducer = (state = initialState.user, action) => {
   if (action.type === "SET_STATE") {
